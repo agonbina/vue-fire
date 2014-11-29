@@ -1,0 +1,31 @@
+{
+  "name": "vue-fire",
+  "version": "0.0.1",
+  "description": "Firebase integration with Vue.js",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:agonbina/vue-fire.git"
+  },
+  "keywords": [
+    "firebase",
+    "vue.js",
+    "vue"
+  ],
+  "author": "Agon Bina <agon_bina@hotmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/agonbina/vue-fire/issues"
+  },
+  "homepage": "https://github.com/agonbina/vue-fire",
+  "devDependencies": {
+    "vue": "0.11.x",
+    "webpack": "^1.4.10",
+    "jade-html-loader": "0.0.2",
+    "html-loader": "^0.2.3",
+    "jade": "^1.7.0"
+  },
+  "dependencies": {
+    "101": "^0.7.1"
+  }
+}
