@@ -49,26 +49,36 @@ This mixin attaches a ```$firebase``` property on the view model, which has the 
 
 ## API for vm.$firebase
 
-### .setValue(ref|Firebase)
-  Creates a new keypath in ```$data``` with the ```.key()``` of the Firebase ```ref```.
-  Attaches a listener on the ```'value'``` event and updates the value stored in the keypath.
+### .$setValue([ keyPath|String ], firebaseKey|String)
+  Creates a new keypath in view model with the ```firebaseKey``` or ```keyPath```(if specified) and listens on the
+  ```'value'``` event to update the view model value as it changes in the ```firebaseKey``` Firebase location.
 
-### .setArray(ref|Firebase)
+### .$setArray([ firebaseKey|String ], setter|Function)
   Creates an array with the reference key in $data and attaches listeners
   on the Firebase list events(child_added, child_removed, child_moved, child_changed).
 
 ```js
-  vm.$firebase.setArray(function(root) {
-    return root.child('people').orderByChild('crazinessFactor').equalTo('100%');
-  })
+  vm.$firebase.setArray('crazyPeople', function(root) {
+    return root.child('people').orderByChild('crazinessFactor').equalTo('100');
+  }) // vm.crazyPeople now updates as the data in the given query changes/moves
 ```
 
-### .remove(path|String, [ removeLocal|Boolean ])
-  Removes the Firebase listeners for the given path, so the value stored in ```$data```
-  is no longer updated.
+### .$get(key|String)
+  Every reference that is returned from the ```firebase``` option in the view model has a property within vm.$firebase.
+  From the example above:
+  ```
+  vm.$firebase.$get('people')
+  vm.$firebase.$get('presence')
+  vm.$firebase.$get('name')
+  ```
+
+  The returned object has the following API:
+
+#### .on(event|String, callback|Function)
+#### .off(event|String, [ callback|Function ])
+#### .ref()
+
+### .remove([ removeLocal|Boolean ])
+  Removes the Firebase listeners, so the value stored in ```$data``` is no longer updated.
   If ```removeLocal``` is set to ```true```, it ```$delete```s the keypath from the view model.
 
-### .ref(path|String)
-  Retrieve the Firebase ```ref``` instance previously specified in ```fb``` or during a ```.set*``` operation.
-  Note: If the reference is a Firebase Query, ```.ref(path)``` will still return the reference to
-  ```firebaseUrl/**path**``` and not the query instance that was passed in.
