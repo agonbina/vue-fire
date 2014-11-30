@@ -49,7 +49,7 @@ This mixin sets a ```$firebase``` property on the view model, which has the foll
 
 ## API for vm.$firebase
 
-### .setValue([ keyPath|String ], firebaseLocation|String)
+### .setValue(firebaseLocation|String, [ keyPath|String ])
   Creates a new keypath in the view model with the ```firebaseLocation``` reference key or ```keyPath```(if specified)
   and listens on the ```'value'``` event to update the view model value as it changes in the ```firebaseLocation```.
 

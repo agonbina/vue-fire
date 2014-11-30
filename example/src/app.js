@@ -21,7 +21,7 @@ module.exports = {
         '<div>isOnline: {{isOnline}}</div>',
 
     ready: function () {
-        this.$firebase.setValue('isOnline', 'user/presence');
+        this.$firebase.setValue('user/presence', 'isOnline');
     }
 
 };
