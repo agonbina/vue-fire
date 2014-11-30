@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <title>Vue-fire by agonbina</title>
+  </head>
+
+  <body>
+    <header>
+      <div class="inner">
+        <h1>Vue-fire</h1>
+        <h2></h2>
+        <a href="https://github.com/agonbina/vue-fire" class="button"><small>View project on</small> GitHub</a>
+      </div>
+    </header>
+
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h1>
+<a id="wip-vue-fire" class="anchor" href="#wip-vue-fire" aria-hidden="true"><span class="octicon octicon-link"></span></a>
+<strong>WIP</strong> vue-fire</h1>
+
+<p>Sync a $data path of a Vue.js view model with a Firebase reference.</p>
+
+<h2>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h2>
+
+<p>First add it as a dependency:</p>
+
+<pre><code>npm install --save vue-fire
+</code></pre>
+
+<div class="highlight highlight-javascript"><pre><span class="pl-c">// Plugin</span>
+
+<span class="pl-s">var</span> Vue <span class="pl-k">=</span> <span class="pl-s3">require</span>(<span class="pl-s1"><span class="pl-pds">'</span>vue<span class="pl-pds">'</span></span>);
+<span class="pl-s">var</span> vueFire <span class="pl-k">=</span> <span class="pl-s3">require</span>(<span class="pl-s1"><span class="pl-pds">'</span>vue-fire<span class="pl-pds">'</span></span>);
+
+Vue.use(vueFire, { app<span class="pl-k">:</span> <span class="pl-s1"><span class="pl-pds">'</span>your-firebase-app<span class="pl-pds">'</span></span> });
+
+<span class="pl-c">// Mixin</span>
+
+<span class="pl-s">var</span> firebaseMixin <span class="pl-k">=</span> <span class="pl-s3">require</span>(<span class="pl-s1"><span class="pl-pds">'</span>vue-fire<span class="pl-pds">'</span></span>).mixin;
+
+<span class="pl-s">var</span> app <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">Vue</span>({
+
+  mixins<span class="pl-k">:</span> [ firebaseMixin ],
+
+  template<span class="pl-k">:</span> <span class="pl-s1"><span class="pl-pds">'</span>&lt;ul&gt;<span class="pl-pds">'</span></span> <span class="pl-k">+</span>
+              <span class="pl-s1"><span class="pl-pds">'</span>&lt;li v-repeat="people"&gt;{{name}} : {{age}}&lt;/li&gt;<span class="pl-pds">'</span></span> <span class="pl-k">+</span>
+            <span class="pl-s1"><span class="pl-pds">'</span>&lt;/ul&gt;<span class="pl-pds">'</span></span>,
+
+  <span class="pl-en">firebase</span>: <span class="pl-st">function</span>(<span class="pl-vpf">root</span>) {
+    <span class="pl-s">var</span> peopleRef <span class="pl-k">=</span> root.child(<span class="pl-s1"><span class="pl-pds">'</span>people<span class="pl-pds">'</span></span>).orderBy(<span class="pl-s1"><span class="pl-pds">'</span>age<span class="pl-pds">'</span></span>).limitToLast(<span class="pl-c1">3</span>);
+
+    <span class="pl-k">return</span> {
+      arrays<span class="pl-k">:</span> [ peopleRef ],
+      values<span class="pl-k">:</span> [
+        <span class="pl-s1"><span class="pl-pds">'</span>status<span class="pl-pds">'</span></span>,
+        <span class="pl-s1"><span class="pl-pds">'</span>name<span class="pl-pds">'</span></span>
+      ]
+    };
+  },
+
+  <span class="pl-en">ready</span>: <span class="pl-st">function</span>() {
+    <span class="pl-c">// this.$firebase has been created, you can attach more stuff to the view model</span>
+    <span class="pl-s">var</span> ref <span class="pl-k">=</span> <span class="pl-v">this</span>.$firebase.setValue(<span class="pl-s1"><span class="pl-pds">'</span>user/presence<span class="pl-pds">'</span></span>, <span class="pl-s1"><span class="pl-pds">'</span>isOnline<span class="pl-pds">'</span></span>);
+
+    ref.on(<span class="pl-s1"><span class="pl-pds">'</span>value:error<span class="pl-pds">'</span></span>, <span class="pl-st">function</span>(<span class="pl-vpf">err</span>) { })
+  }
+
+});
+
+app.$mount(<span class="pl-s1"><span class="pl-pds">'</span>#app<span class="pl-pds">'</span></span>);</pre></div>
+
+<p>This mixin sets a <code>$firebase</code> property on the view model, which has the following API:</p>
+
+<h2>
+<a id="api-for-vmfirebase" class="anchor" href="#api-for-vmfirebase" aria-hidden="true"><span class="octicon octicon-link"></span></a>API for vm.$firebase</h2>
+
+<h3>
+<a id="setvaluefirebaselocationstring--keypathstring-" class="anchor" href="#setvaluefirebaselocationstring--keypathstring-" aria-hidden="true"><span class="octicon octicon-link"></span></a>.setValue(firebaseLocation|String, [ keyPath|String ])</h3>
+
+<p>Creates a new keypath in the view model with the <code>firebaseLocation</code> reference key or <code>keyPath</code>(if specified)
+  and listens on the <code>'value'</code> event to update the view model value as it changes in the <code>firebaseLocation</code>.</p>
+
+<p>Ex.</p>
+
+<div class="highlight highlight-js"><pre>  <span class="pl-c">// Binds https://your-firebase-app.firebaseio.com/user/presence to the 'vm.isOnline' keypath</span>
+  vm.$firebase.setValue(<span class="pl-s1"><span class="pl-pds">'</span>user/presence<span class="pl-pds">'</span></span>, <span class="pl-s1"><span class="pl-pds">'</span>isOnline<span class="pl-pds">'</span></span>)
+
+  <span class="pl-c">// Binds https://your-firebase-app.firebaseio.com/title to the 'vm.title' keypath</span>
+  vm.$firebase.setValue(<span class="pl-s1"><span class="pl-pds">'</span>title<span class="pl-pds">'</span></span>)</pre></div>
+
+<p>.setValue return a <a href="#getkeypathstring"><code>FirebaseValue</code></a> instance.</p>
+
+<h3>
+<a id="setarray-firebasekeystring--setterfunction" class="anchor" href="#setarray-firebasekeystring--setterfunction" aria-hidden="true"><span class="octicon octicon-link"></span></a>.setArray([ firebaseKey|String ], setter|Function)</h3>
+
+<p>Creates an array with the reference key in $data and attaches listeners
+  on the Firebase list events(child_added, child_removed, child_moved, child_changed).</p>
+
+<div class="highlight highlight-js"><pre>  vm.$firebase.setArray(<span class="pl-s1"><span class="pl-pds">'</span>crazyPeople<span class="pl-pds">'</span></span>, <span class="pl-st">function</span>(<span class="pl-vpf">root</span>) {
+    <span class="pl-k">return</span> root.child(<span class="pl-s1"><span class="pl-pds">'</span>people<span class="pl-pds">'</span></span>).orderByChild(<span class="pl-s1"><span class="pl-pds">'</span>crazinessFactor<span class="pl-pds">'</span></span>).equalTo(<span class="pl-s1"><span class="pl-pds">'</span>100<span class="pl-pds">'</span></span>);
+  }) <span class="pl-c">// vm.crazyPeople now updates as the data in the given query changes/moves</span></pre></div>
+
+<h3>
+<a id="getkeypathstring" class="anchor" href="#getkeypathstring" aria-hidden="true"><span class="octicon octicon-link"></span></a>.get(keyPath|String)</h3>
+
+<p>Returns a FirebaseValue or FirebaseArray.</p>
+
+<p>From the usage example above:</p>
+
+<pre><code>  vm.$firebase.get('people')
+  vm.$firebase.get('status')
+  vm.$firebase.get('name')
+</code></pre>
+
+<p>The returned object is an <a href="https://github.com/component/emitter">Event Emitter</a> and has the following API:</p>
+
+<h4>
+<a id="oneventstring-callbackfunction" class="anchor" href="#oneventstring-callbackfunction" aria-hidden="true"><span class="octicon octicon-link"></span></a>.on(event|String, callback|Function)</h4>
+
+<p>If its a FirebaseValue instance, you can listen on the <code>'value'</code> event if you need to get a hold of the raw
+  <code>snapshot</code>, or the <code>'value:error'</code> event which fires when there is an error in the syncing from Firebase.</p>
+
+<div class="highlight highlight-js"><pre>  <span class="pl-s">var</span> isOnline <span class="pl-k">=</span> vm.$firebase.get(<span class="pl-s1"><span class="pl-pds">'</span>isOnline<span class="pl-pds">'</span></span>)
+
+  isOnline.on(<span class="pl-s1"><span class="pl-pds">'</span>value<span class="pl-pds">'</span></span>, <span class="pl-st">function</span>(<span class="pl-vpf">snapshot</span>) { })
+  isOnline.on(<span class="pl-s1"><span class="pl-pds">'</span>value:error<span class="pl-pds">'</span></span>, <span class="pl-st">function</span>(<span class="pl-vpf">error</span>) { })</pre></div>
+
+<h3>
+<a id="once" class="anchor" href="#once" aria-hidden="true"><span class="octicon octicon-link"></span></a>.once()</h3>
+
+<p>Same as .on, but triggers only one time.</p>
+
+<h4>
+<a id="offeventstring-callbackfunction-" class="anchor" href="#offeventstring-callbackfunction-" aria-hidden="true"><span class="octicon octicon-link"></span></a>.off([event|String, callback|Function ])</h4>
+
+<p>Stop listening for an event which you previously subscribed to, or all of them when you don't pass any argument to .off</p>
+
+<h4>
+<a id="ref" class="anchor" href="#ref" aria-hidden="true"><span class="octicon octicon-link"></span></a>.ref()</h4>
+
+<p>Returns the raw Firebase reference object.</p>
+
+<h3>
+<a id="remove-removelocalboolean-" class="anchor" href="#remove-removelocalboolean-" aria-hidden="true"><span class="octicon octicon-link"></span></a>.remove([ removeLocal|Boolean ])</h3>
+
+<p>Removes the Firebase listeners, so the value stored in <code>$data</code> is no longer updated.
+  If <code>removeLocal</code> is set to <code>true</code>, it completely <code>$delete</code>s the keypath from the view model.</p>
+        </section>
+
+        <aside id="sidebar">
+          <a href="https://github.com/agonbina/vue-fire/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/agonbina/vue-fire/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
+
+          <p class="repo-owner"><a href="https://github.com/agonbina/vue-fire"></a> is maintained by <a href="https://github.com/agonbina">agonbina</a>.</p>
+
+          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
+    </div>
+
+  
+  </body>
+</html>
