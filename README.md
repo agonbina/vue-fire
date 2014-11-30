@@ -2,7 +2,7 @@
 ============
 Sync a $data path of a Vue.js view model with a Firebase reference.
 
-## Usage
+### Usage
 First add it as a dependency:
 ```
 npm install --save vue-fire
@@ -54,9 +54,9 @@ app.$mount('#app');
 
 This mixin sets a ```$firebase``` property on the view model, which has the following API:
 
-## API for vm.$firebase
+### API for vm.$firebase
 
-### .setValue(firebaseLocation|String, [ keyPath|String ])
+#### .setValue(firebaseLocation|String, [ keyPath|String ])
   Creates a new keypath in the view model with the ```firebaseLocation``` reference key or ```keyPath```(if specified)
   and listens on the ```'value'``` event to update the view model value as it changes in the ```firebaseLocation```.
 
@@ -72,7 +72,7 @@ This mixin sets a ```$firebase``` property on the view model, which has the foll
 
   .setValue returns a [```FirebaseValue```](#getkeypathstring) instance.
 
-### .setArray([ firebaseLocation|String, setter|Function OR keyPath|String ])
+#### .setArray([ firebaseLocation|String, setter|Function OR keyPath|String ])
   Creates an array with the reference key in $data and attaches listeners
   on the Firebase list events(child_added, child_removed, child_moved, child_changed).
   Examples:
@@ -106,7 +106,7 @@ This mixin sets a ```$firebase``` property on the view model, which has the foll
 
   .setArray returns a [```FirebaseArray```](#getkeypathstring) instance.
 
-### .get(keyPath|String)
+#### .get(keyPath|String)
   Returns a FirebaseValue or FirebaseArray.
 
   From the usage example above:
@@ -160,7 +160,7 @@ This mixin sets a ```$firebase``` property on the view model, which has the foll
 #### .ref()
   Returns the raw Firebase reference object.
 
-### .remove([ removeLocal|Boolean ])
+#### .remove([ removeLocal|Boolean ])
   Removes the Firebase listeners, so the value stored in ```$data``` is no longer updated.
   If ```removeLocal``` is set to ```true```, it completely ```$delete```s the keypath from the view model.
 
