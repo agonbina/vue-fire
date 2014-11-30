@@ -29,7 +29,7 @@ exports.install = function (Vue, options) {
 
 
     /**
-     * Setup, then export the vue-fire plugin
+     * Setup, then export the vue-fire mixin
      */
 
     exports.mixin = require('./mixin')(app)

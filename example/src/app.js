@@ -11,10 +11,13 @@ module.exports = {
         return {
             arrays: [ peopleQuery ],
             values: [
-                root.child('presence'),
-                root.child('name')
+                'name'
             ]
         }
+    },
+
+    ready: function () {
+        this.$firebase.setValue('isOnline', 'user/presence');
     }
 
 };
