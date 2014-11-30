@@ -3,11 +3,11 @@
 Sync a $data path of a Vue.js view model with a Firebase reference.
 
 ## Usage
+First add it as a dependency:
 ```
 npm install --save vue-fire
 ```
 
-## Example
 ```javascript
 // Plugin
 
@@ -38,6 +38,13 @@ var app = new Vue({
         'name'
       ]
     };
+  },
+
+  ready: function() {
+    // this.$firebase has been created, you can attach more stuff to the view model
+    var ref = this.$firebase.setValue('user/presence', 'isOnline');
+
+    ref.on('value:error', function(err) { })
   }
 
 });
@@ -63,7 +70,7 @@ This mixin sets a ```$firebase``` property on the view model, which has the foll
   vm.$firebase.setValue('title')
   ```
 
-  .setValue return a [```FirebaseValue```](#getkeystring) instance.
+  .setValue return a [```FirebaseValue```](#getkeypathstring) instance.
 
 ### .setArray([ firebaseKey|String ], setter|Function)
   Creates an array with the reference key in $data and attaches listeners
@@ -78,18 +85,19 @@ This mixin sets a ```$firebase``` property on the view model, which has the foll
 ### .get(keyPath|String)
   Returns a FirebaseValue or FirebaseArray.
 
-  From the example above:
+  From the usage example above:
   ```
   vm.$firebase.get('people')
-  vm.$firebase.get('presence')
+  vm.$firebase.get('status')
   vm.$firebase.get('name')
   ```
 
   The returned object is an [Event Emitter](https://github.com/component/emitter) and has the following API:
 
 #### .on(event|String, callback|Function)
-  For FirebaseValue, you can listen on the ```'value'``` event if you need to get a hold off the raw ```snapshot```, or
-  the ```'value:error'``` event which fires when there is an error in the syncing from Firebase.
+  If its a FirebaseValue instance, you can listen on the ```'value'``` event if you need to get a hold of the raw
+  ```snapshot```, or the ```'value:error'``` event which fires when there is an error in the syncing from Firebase.
+  
   ```js
   var isOnline = vm.$firebase.get('isOnline')
 
@@ -97,8 +105,11 @@ This mixin sets a ```$firebase``` property on the view model, which has the foll
   isOnline.on('value:error', function(error) { })
   ```
 
-#### .off(event|String, [ callback|Function ])
-  Stop listening for an event which you
+### .once()
+  Same as .on, but triggers only one time.
+
+#### .off([event|String, callback|Function ])
+  Stop listening for an event which you previously subscribed to, or all of them when you don't pass any argument to .off
 
 #### .ref()
   Returns the raw Firebase reference object.
