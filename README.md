@@ -122,7 +122,7 @@ This mixin sets a ```$firebase``` property on the view model, which has the foll
 
   The returned object is also an [Event Emitter](https://github.com/component/emitter) and has the following API:
 
-#### .on(event|String, callback|Function)
+##### .on(event|String, callback|Function)
   If its a ```FirebaseValue``` instance, you can listen on the ```'value'``` event if you need to get a hold of the raw
   ```snapshot```, or the ```'value:error'``` event which fires when there is an error in the syncing from Firebase.
 
@@ -134,11 +134,7 @@ This mixin sets a ```$firebase``` property on the view model, which has the foll
   ```
 
   If its a ```FirebaseArray``` instance, you can listen on the same events as you would on a Firebase list reference:
-
-  * **'child_added'**
-  * **'child_moved'**
-  * **'child_changed'**
-  * **'child_removed'**
+   ```'child_added'```, ```'child_moved'```, ```'child_changed'```, ```'child_removed'```
 
   ```js
   var members = vm.$firebase.get('members'); // Assuming 'members' was created using .setArray
@@ -151,16 +147,17 @@ This mixin sets a ```$firebase``` property on the view model, which has the foll
   // Each one of these events can throw errors which you can listen to by adding ':error' to the eventName:
   members.on('child_removed:error', function(error) { })
   ```
-#### .once()
+
+##### .once()
   Same as .on, but triggers only one time.
 
-#### .off([event|String, callback|Function ])
+##### .off([event|String, callback|Function ])
   Stop listening for an event which you previously subscribed to, or all of them when you don't pass any argument to .off
 
-#### .ref()
+##### .ref()
   Returns the raw Firebase reference object.
 
-#### .remove([ removeLocal|Boolean ])
+##### .remove([ removeLocal|Boolean ])
   Removes the Firebase listeners, so the value stored in ```$data``` is no longer updated.
   If ```removeLocal``` is set to ```true```, it completely ```$delete```s the keypath from the view model.
 
