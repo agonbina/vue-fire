@@ -21,7 +21,10 @@ module.exports = {
         '<div>isOnline: {{isOnline}}</div>',
 
     ready: function () {
-        this.$firebase.setValue('user/presence', 'isOnline');
+        var ref = this.$firebase.setValue('user/presence', 'isOnline');
+        ref.on('value', function (snap) {
+            console.log(snap.val())
+        });
     }
 
 };
