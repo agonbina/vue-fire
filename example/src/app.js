@@ -17,6 +17,9 @@ module.exports = {
     },
 
     template:
+        '<ul>' +
+            '<li v-repeat="people">{{name}} : {{age}}</li>' +
+        '</ul>' +
         '<div>name: {{name}}</div>' +
         '<div>isOnline: {{isOnline}}</div>',
 
@@ -25,6 +28,10 @@ module.exports = {
         ref.on('value', function (snap) {
             console.log(snap.val())
         });
+
+        var usersRef = this.$firebase.setArray(function (root) {
+            return root.child('names').limitToFirst(3);
+        }, 'myUsers');
     }
 
 };

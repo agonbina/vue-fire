@@ -23,7 +23,7 @@ module.exports = function (app) {
             var firebase = this.$options.firebase || noop;
             var refs = firebase.call(root, root) || {};
 
-            //var arrays = refs.arrays || [];
+            var arrays = refs.arrays || [];
             var values = refs.values || [];
 
             vm.$firebase = new Fire(vm, root);
@@ -32,6 +32,10 @@ module.exports = function (app) {
                 vm.$firebase.setValue(keyPath)
             });
 
+            arrays.forEach(function (ref) {
+                var setter = function() { return ref };
+                vm.$firebase.setArray(setter);
+            });
         },
 
         attached: function () {
