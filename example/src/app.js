@@ -32,6 +32,10 @@ module.exports = {
         var usersRef = this.$firebase.setArray(function (root) {
             return root.child('names').limitToFirst(3);
         }, 'myUsers');
+
+        usersRef.on('child_added', function ($id, $prevId) {
+            console.log('added myUsers with $id: ' + $id);
+        })
     }
 
 };
