@@ -57,11 +57,13 @@ This mixin sets a ```$firebase``` property on the view model, which has the foll
 
   ```js
   // Binds https://your-firebase-app.firebaseio.com/user/presence to the 'vm.isOnline' keypath
-  vm.$firebase.setValue('isOnline', 'user/presence')
+  vm.$firebase.setValue('user/presence', 'isOnline')
 
   // Binds https://your-firebase-app.firebaseio.com/title to the 'vm.title' keypath
   vm.$firebase.setValue('title')
   ```
+
+  .setValue return a [```FirebaseValue```](#getkeystring) instance.
 
 ### .setArray([ firebaseKey|String ], setter|Function)
   Creates an array with the reference key in $data and attaches listeners
@@ -73,22 +75,35 @@ This mixin sets a ```$firebase``` property on the view model, which has the foll
   }) // vm.crazyPeople now updates as the data in the given query changes/moves
 ```
 
-### .get(key|String)
-  Every reference that is returned from the ```firebase``` option in the view model has a property within vm.$firebase.
+### .get(keyPath|String)
+  Returns a FirebaseValue or FirebaseArray.
+
   From the example above:
   ```
-  vm.$firebase.$get('people')
-  vm.$firebase.$get('presence')
-  vm.$firebase.$get('name')
+  vm.$firebase.get('people')
+  vm.$firebase.get('presence')
+  vm.$firebase.get('name')
   ```
 
-  The returned object has the following API:
+  The returned object is an [Event Emitter](https://github.com/component/emitter) and has the following API:
 
 #### .on(event|String, callback|Function)
+  For FirebaseValue, you can listen on the ```'value'``` event if you need to get a hold off the raw ```snapshot```, or
+  the ```'value:error'``` event which fires when there is an error in the syncing from Firebase.
+  ```js
+  var isOnline = vm.$firebase.get('isOnline')
+
+  isOnline.on('value', function(snapshot) { })
+  isOnline.on('value:error', function(error) { })
+  ```
+
 #### .off(event|String, [ callback|Function ])
+  Stop listening for an event which you
+
 #### .ref()
+  Returns the raw Firebase reference object.
 
 ### .remove([ removeLocal|Boolean ])
   Removes the Firebase listeners, so the value stored in ```$data``` is no longer updated.
-  If ```removeLocal``` is set to ```true```, it ```$delete```s the keypath from the view model.
+  If ```removeLocal``` is set to ```true```, it completely ```$delete```s the keypath from the view model.
 
