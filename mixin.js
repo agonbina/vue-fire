@@ -21,7 +21,7 @@ module.exports = function (app) {
         created: function () {
             var vm = this;
             var firebase = this.$options.firebase || noop;
-            var refs = firebase.call(root, root) || {};
+            var refs = firebase.call(vm, root) || {};
 
             var arrays = refs.arrays || [];
             var values = refs.values || [];
