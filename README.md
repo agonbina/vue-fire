@@ -1,5 +1,5 @@
-**WIP** vue-fire
-============
+vue-fire (0.1.0)
+================
 Sync a $data path of a Vue.js view model with a Firebase reference.
 
 ### Usage
@@ -42,9 +42,8 @@ var app = new Vue({
 
   ready: function() {
     // this.$firebase has been created, you can attach more stuff to the view model
-    var ref = this.$firebase.setValue('user/presence', 'isOnline');
-
-    ref.on('value:error', function(err) { })
+    var isOnline = this.$firebase.setValue('user/presence', 'isOnline');
+    isOnline.on('value:error', function(err) { })
   }
 
 });
