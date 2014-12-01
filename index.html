@@ -31,13 +31,12 @@
       </header>
       <section>
         <h1>
-<a id="wip-vue-fire" class="anchor" href="#wip-vue-fire" aria-hidden="true"><span class="octicon octicon-link"></span></a>
-<strong>WIP</strong> vue-fire</h1>
+<a id="vue-fire-010" class="anchor" href="#vue-fire-010" aria-hidden="true"><span class="octicon octicon-link"></span></a>vue-fire (0.1.0)</h1>
 
 <p>Sync a $data path of a Vue.js view model with a Firebase reference.</p>
 
-<h2>
-<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h2>
+<h3>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h3>
 
 <p>First add it as a dependency:</p>
 
@@ -77,9 +76,8 @@ Vue.use(vueFire, { app<span class="pl-k">:</span> <span class="pl-s1"><span clas
 
   <span class="pl-en">ready</span>: <span class="pl-st">function</span>() {
     <span class="pl-c">// this.$firebase has been created, you can attach more stuff to the view model</span>
-    <span class="pl-s">var</span> ref <span class="pl-k">=</span> <span class="pl-v">this</span>.$firebase.setValue(<span class="pl-s1"><span class="pl-pds">'</span>user/presence<span class="pl-pds">'</span></span>, <span class="pl-s1"><span class="pl-pds">'</span>isOnline<span class="pl-pds">'</span></span>);
-
-    ref.on(<span class="pl-s1"><span class="pl-pds">'</span>value:error<span class="pl-pds">'</span></span>, <span class="pl-st">function</span>(<span class="pl-vpf">err</span>) { })
+    <span class="pl-s">var</span> isOnline <span class="pl-k">=</span> <span class="pl-v">this</span>.$firebase.setValue(<span class="pl-s1"><span class="pl-pds">'</span>user/presence<span class="pl-pds">'</span></span>, <span class="pl-s1"><span class="pl-pds">'</span>isOnline<span class="pl-pds">'</span></span>);
+    isOnline.on(<span class="pl-s1"><span class="pl-pds">'</span>value:error<span class="pl-pds">'</span></span>, <span class="pl-st">function</span>(<span class="pl-vpf">err</span>) { })
   }
 
 });
@@ -88,11 +86,11 @@ app.$mount(<span class="pl-s1"><span class="pl-pds">'</span>#app<span class="pl-
 
 <p>This mixin sets a <code>$firebase</code> property on the view model, which has the following API:</p>
 
-<h2>
-<a id="api-for-vmfirebase" class="anchor" href="#api-for-vmfirebase" aria-hidden="true"><span class="octicon octicon-link"></span></a>API for vm.$firebase</h2>
-
 <h3>
-<a id="setvaluefirebaselocationstring--keypathstring-" class="anchor" href="#setvaluefirebaselocationstring--keypathstring-" aria-hidden="true"><span class="octicon octicon-link"></span></a>.setValue(firebaseLocation|String, [ keyPath|String ])</h3>
+<a id="api-for-vmfirebase" class="anchor" href="#api-for-vmfirebase" aria-hidden="true"><span class="octicon octicon-link"></span></a>API for vm.$firebase</h3>
+
+<h4>
+<a id="setvaluefirebaselocationstring--keypathstring-" class="anchor" href="#setvaluefirebaselocationstring--keypathstring-" aria-hidden="true"><span class="octicon octicon-link"></span></a>.setValue(firebaseLocation|String, [ keyPath|String ])</h4>
 
 <p>Creates a new keypath in the view model with the <code>firebaseLocation</code> reference key or <code>keyPath</code>(if specified)
   and listens on the <code>'value'</code> event to update the view model value as it changes in the <code>firebaseLocation</code>.</p>
@@ -105,36 +103,63 @@ app.$mount(<span class="pl-s1"><span class="pl-pds">'</span>#app<span class="pl-
   <span class="pl-c">// Binds https://your-firebase-app.firebaseio.com/title to the 'vm.title' keypath</span>
   vm.$firebase.setValue(<span class="pl-s1"><span class="pl-pds">'</span>title<span class="pl-pds">'</span></span>)</pre></div>
 
-<p>.setValue return a <a href="#getkeypathstring"><code>FirebaseValue</code></a> instance.</p>
+<p>.setValue returns a <a href="#getkeypathstring"><code>FirebaseValue</code></a> instance.</p>
 
-<h3>
-<a id="setarray-firebasekeystring--setterfunction" class="anchor" href="#setarray-firebasekeystring--setterfunction" aria-hidden="true"><span class="octicon octicon-link"></span></a>.setArray([ firebaseKey|String ], setter|Function)</h3>
+<h4>
+<a id="setarray-firebaselocationstring-setterfunction-or-keypathstring-" class="anchor" href="#setarray-firebaselocationstring-setterfunction-or-keypathstring-" aria-hidden="true"><span class="octicon octicon-link"></span></a>.setArray([ firebaseLocation|String, setter|Function OR keyPath|String ])</h4>
 
 <p>Creates an array with the reference key in $data and attaches listeners
-  on the Firebase list events(child_added, child_removed, child_moved, child_changed).</p>
+  on the Firebase list events(child_added, child_removed, child_moved, child_changed).
+  Examples:</p>
 
-<div class="highlight highlight-js"><pre>  vm.$firebase.setArray(<span class="pl-s1"><span class="pl-pds">'</span>crazyPeople<span class="pl-pds">'</span></span>, <span class="pl-st">function</span>(<span class="pl-vpf">root</span>) {
-    <span class="pl-k">return</span> root.child(<span class="pl-s1"><span class="pl-pds">'</span>people<span class="pl-pds">'</span></span>).orderByChild(<span class="pl-s1"><span class="pl-pds">'</span>crazinessFactor<span class="pl-pds">'</span></span>).equalTo(<span class="pl-s1"><span class="pl-pds">'</span>100<span class="pl-pds">'</span></span>);
-  }) <span class="pl-c">// vm.crazyPeople now updates as the data in the given query changes/moves</span></pre></div>
+<p>You can pass just the Firebase location:</p>
 
-<h3>
-<a id="getkeypathstring" class="anchor" href="#getkeypathstring" aria-hidden="true"><span class="octicon octicon-link"></span></a>.get(keyPath|String)</h3>
+<div class="highlight highlight-js"><pre>  vm.$firebase.setArray(<span class="pl-s1"><span class="pl-pds">'</span>group/123/members<span class="pl-pds">'</span></span>); <span class="pl-c">// vm.members will be synced with this Firebase location</span>
+  vm.$firebase.setArray(<span class="pl-s1"><span class="pl-pds">'</span>players<span class="pl-pds">'</span></span>); <span class="pl-c">// vm.players will be synced with this Firebase location</span></pre></div>
+
+<p>You can also pass an optional keyPath:</p>
+
+<div class="highlight highlight-js"><pre>  vm.$firebase.setArray(<span class="pl-s1"><span class="pl-pds">'</span>group/123/members<span class="pl-pds">'</span></span>, <span class="pl-s1"><span class="pl-pds">'</span>firebaseMembers<span class="pl-pds">'</span></span>); <span class="pl-c">// vm.firebaseMembers is now synced with the 'group/123/members' location</span></pre></div>
+
+<p>If you need access to the view model to construct a Firebase reference or query you can pass in a function:</p>
+
+<div class="highlight highlight-js"><pre>    vm.$firebase.setArray(<span class="pl-st">function</span>(<span class="pl-vpf">root</span>) {
+      <span class="pl-s">var</span> groupId <span class="pl-k">=</span> <span class="pl-v">this</span>.<span class="pl-sc">id</span>;
+
+      <span class="pl-c">// root === new Firebase('https://your-app-name.firebaseio.com')</span>
+      <span class="pl-c">// this === vm</span>
+
+      <span class="pl-k">return</span> root.child(<span class="pl-s1"><span class="pl-pds">'</span>group<span class="pl-pds">'</span></span>).child(groupId).child(<span class="pl-s1"><span class="pl-pds">'</span>members<span class="pl-pds">'</span></span>).orderByChild(<span class="pl-s1"><span class="pl-pds">'</span>name<span class="pl-pds">'</span></span>);
+    })
+    <span class="pl-c">// vm.members will be synced with the returned Firebase Query</span>
+
+    <span class="pl-c">// You can also pass a custom keyPath</span>
+    vm.$firebase.setArray(<span class="pl-st">function</span>(<span class="pl-vpf">root</span>) { <span class="pl-k">return</span> someReference }, <span class="pl-s1"><span class="pl-pds">'</span>myKey<span class="pl-pds">'</span></span>)</pre></div>
+
+<p>.setArray returns a <a href="#getkeypathstring"><code>FirebaseArray</code></a> instance.</p>
+
+<h4>
+<a id="getkeypathstring" class="anchor" href="#getkeypathstring" aria-hidden="true"><span class="octicon octicon-link"></span></a>.get(keyPath|String)</h4>
 
 <p>Returns a FirebaseValue or FirebaseArray.</p>
 
 <p>From the usage example above:</p>
 
-<pre><code>  vm.$firebase.get('people')
+<pre><code>  // Values
+  vm.$firebase.get('people')
   vm.$firebase.get('status')
   vm.$firebase.get('name')
+
+  // Arrays
+  vm.$firebase.get('members')
 </code></pre>
 
-<p>The returned object is an <a href="https://github.com/component/emitter">Event Emitter</a> and has the following API:</p>
+<p>The returned object is also an <a href="https://github.com/component/emitter">Event Emitter</a> and has the following API:</p>
 
-<h4>
-<a id="oneventstring-callbackfunction" class="anchor" href="#oneventstring-callbackfunction" aria-hidden="true"><span class="octicon octicon-link"></span></a>.on(event|String, callback|Function)</h4>
+<h5>
+<a id="oneventstring-callbackfunction" class="anchor" href="#oneventstring-callbackfunction" aria-hidden="true"><span class="octicon octicon-link"></span></a>.on(event|String, callback|Function)</h5>
 
-<p>If its a FirebaseValue instance, you can listen on the <code>'value'</code> event if you need to get a hold of the raw
+<p>If its a <code>FirebaseValue</code> instance, you can listen on the <code>'value'</code> event if you need to get a hold of the raw
   <code>snapshot</code>, or the <code>'value:error'</code> event which fires when there is an error in the syncing from Firebase.</p>
 
 <div class="highlight highlight-js"><pre>  <span class="pl-s">var</span> isOnline <span class="pl-k">=</span> vm.$firebase.get(<span class="pl-s1"><span class="pl-pds">'</span>isOnline<span class="pl-pds">'</span></span>)
@@ -142,23 +167,36 @@ app.$mount(<span class="pl-s1"><span class="pl-pds">'</span>#app<span class="pl-
   isOnline.on(<span class="pl-s1"><span class="pl-pds">'</span>value<span class="pl-pds">'</span></span>, <span class="pl-st">function</span>(<span class="pl-vpf">snapshot</span>) { })
   isOnline.on(<span class="pl-s1"><span class="pl-pds">'</span>value:error<span class="pl-pds">'</span></span>, <span class="pl-st">function</span>(<span class="pl-vpf">error</span>) { })</pre></div>
 
-<h3>
-<a id="once" class="anchor" href="#once" aria-hidden="true"><span class="octicon octicon-link"></span></a>.once()</h3>
+<p>If its a <code>FirebaseArray</code> instance, you can listen on the same events as you would on a Firebase list reference:
+   <code>'child_added'</code>, <code>'child_moved'</code>, <code>'child_changed'</code>, <code>'child_removed'</code></p>
+
+<div class="highlight highlight-js"><pre>  <span class="pl-s">var</span> members <span class="pl-k">=</span> vm.$firebase.get(<span class="pl-s1"><span class="pl-pds">'</span>members<span class="pl-pds">'</span></span>); <span class="pl-c">// Assuming 'members' was created using .setArray</span>
+
+  members.on(<span class="pl-s1"><span class="pl-pds">'</span>child_added<span class="pl-pds">'</span></span>, <span class="pl-st">function</span>(<span class="pl-vpf">$id</span>, <span class="pl-vpf">$prevChildId</span>) { })
+  members.on(<span class="pl-s1"><span class="pl-pds">'</span>child_moved<span class="pl-pds">'</span></span>, <span class="pl-st">function</span>(<span class="pl-vpf">$id</span>, <span class="pl-vpf">$prevChildId</span>) { })
+  members.on(<span class="pl-s1"><span class="pl-pds">'</span>child_changed<span class="pl-pds">'</span></span>, <span class="pl-st">function</span>(<span class="pl-vpf">$id</span>) { })
+  members.on(<span class="pl-s1"><span class="pl-pds">'</span>child_removed<span class="pl-pds">'</span></span>, <span class="pl-st">function</span>(<span class="pl-vpf">$id</span>) { })
+
+  <span class="pl-c">// Each one of these events can throw errors which you can listen to by adding ':error' to the eventName:</span>
+  members.on(<span class="pl-s1"><span class="pl-pds">'</span>child_removed:error<span class="pl-pds">'</span></span>, <span class="pl-st">function</span>(<span class="pl-vpf">error</span>) { })</pre></div>
+
+<h5>
+<a id="once" class="anchor" href="#once" aria-hidden="true"><span class="octicon octicon-link"></span></a>.once()</h5>
 
 <p>Same as .on, but triggers only one time.</p>
 
-<h4>
-<a id="offeventstring-callbackfunction-" class="anchor" href="#offeventstring-callbackfunction-" aria-hidden="true"><span class="octicon octicon-link"></span></a>.off([event|String, callback|Function ])</h4>
+<h5>
+<a id="offeventstring-callbackfunction-" class="anchor" href="#offeventstring-callbackfunction-" aria-hidden="true"><span class="octicon octicon-link"></span></a>.off([event|String, callback|Function ])</h5>
 
 <p>Stop listening for an event which you previously subscribed to, or all of them when you don't pass any argument to .off</p>
 
-<h4>
-<a id="ref" class="anchor" href="#ref" aria-hidden="true"><span class="octicon octicon-link"></span></a>.ref()</h4>
+<h5>
+<a id="ref" class="anchor" href="#ref" aria-hidden="true"><span class="octicon octicon-link"></span></a>.ref()</h5>
 
 <p>Returns the raw Firebase reference object.</p>
 
-<h3>
-<a id="remove-removelocalboolean-" class="anchor" href="#remove-removelocalboolean-" aria-hidden="true"><span class="octicon octicon-link"></span></a>.remove([ removeLocal|Boolean ])</h3>
+<h5>
+<a id="remove-removelocalboolean-" class="anchor" href="#remove-removelocalboolean-" aria-hidden="true"><span class="octicon octicon-link"></span></a>.remove([ removeLocal|Boolean ])</h5>
 
 <p>Removes the Firebase listeners, so the value stored in <code>$data</code> is no longer updated.
   If <code>removeLocal</code> is set to <code>true</code>, it completely <code>$delete</code>s the keypath from the view model.</p>
