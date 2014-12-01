@@ -1,6 +1,6 @@
 {
   "name": "vue-fire",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Firebase integration with Vue.js",
   "main": "index.js",
   "repository": {
